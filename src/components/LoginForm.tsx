@@ -11,6 +11,8 @@ import { FcGoogle } from 'react-icons/fc';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { setUser } from '@/redux/features/user/userSlice';
+import { useGetMyProfileQuery, useLoginMutation } from '@/redux/features/user/userApi';
 
 
 
@@ -18,7 +20,45 @@ export function LoginForm() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
+  const [login, {  data, isError,  isSuccess }] = useLoginMutation();
+  const { user } = useAppSelector((state) => state.user);
+  const { data:profileData, isError: profileIsError } = useGetMyProfileQuery({accessToken: sessionStorage.getItem('accessToken')});
 
+  React.useEffect(()=>{
+    if(user.email){
+      navigate('/');
+    }else if(sessionStorage.getItem('accessToken')){
+      if(profileIsError){
+        sessionStorage.setItem('accessToken', "");
+        toast("Something went wrong", {
+          autoClose: 2500,
+          type: "error",
+        });
+      }
+      if(profileData){
+        dispatch(setUser(profileData.data.email));
+      }
+    }
+  },[user.email, navigate, profileData, profileIsError, dispatch]);
+  
+  React.useEffect(()=>{
+    if(isError){
+      toast("Something went wrong", {
+        autoClose: 2500,
+        type: "error",
+      });
+    }
+    if(isSuccess){
+      toast("User created successfully", {
+        autoClose: 2500,
+        type: "success",
+      });
+      dispatch(setUser(data.data._doc.email));
+      sessionStorage.setItem('accessToken', data.data.accessToken);
+      navigate('/');
+    }
+  },[isError, isSuccess])
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -29,15 +69,11 @@ export function LoginForm() {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Handle login submission here
-    console.log('Logged in with:', email, password);
+    const data = {email, password}
+    login(data)
   };
 
   const switchToSignup = () => {
-    toast("message", {
-      autoClose: 2500,
-      type: "error",
-    });
     navigate('/signup');
   };
   return (

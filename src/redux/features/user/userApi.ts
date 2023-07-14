@@ -4,10 +4,10 @@ const userApi = api.injectEndpoints({
   endpoints: (builder) => ({
     getMyProfile: builder.query({
       query: ({ accessToken }) => ({
-        url: `/user/my-profile`,
+        url: `/users/my-profile`,
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `${accessToken}`,
         },
       }),
     }),

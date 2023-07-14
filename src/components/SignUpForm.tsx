@@ -9,9 +9,9 @@ import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 // import { createUser } from '@/redux/features/user/userSlice';
-import { useAppDispatch } from '@/redux/hook';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useNavigate } from 'react-router-dom';
-import { useSignupMutation } from '@/redux/features/user/userApi';
+import { useGetMyProfileQuery, useSignupMutation } from '@/redux/features/user/userApi';
 import { toast } from 'react-toastify';
 import { setUser } from '@/redux/features/user/userSlice';
 
@@ -23,6 +23,26 @@ export function SignupForm() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch()
   const [signup, {  data, isError,  isSuccess }] = useSignupMutation();
+  const { user } = useAppSelector((state) => state.user);
+  const { data:profileData, isError: profileIsError } = useGetMyProfileQuery({accessToken: sessionStorage.getItem('accessToken')});
+  console.log(user)
+
+  React.useEffect(()=>{
+    if(user.email){
+      navigate('/');
+    }else if(sessionStorage.getItem('accessToken')){
+      if(profileIsError){
+        sessionStorage.setItem('accessToken', "");
+        toast("Something went wrong", {
+          autoClose: 2500,
+          type: "error",
+        });
+      }
+      if(profileData){
+        dispatch(setUser(profileData.data.email));
+      }
+    }
+  },[user.email, navigate, profileData, profileIsError, dispatch]);
   
   React.useEffect(()=>{
     if(isError){
@@ -36,11 +56,9 @@ export function SignupForm() {
         autoClose: 2500,
         type: "success",
       });
-      console.log(data)
       dispatch(setUser(data.data._doc.email));
-      sessionStorage.setItem('token', data.data.accessToken);
-
-      // navigate('/');
+      sessionStorage.setItem('accessToken', data.data.accessToken);
+      navigate('/');
     }
   },[isError, isSuccess])
 
@@ -55,10 +73,7 @@ export function SignupForm() {
   const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
     const data = {email, password}
-    console.log(data);
     signup(data)
-    // Handle signup submission here
-    console.log('Signed up with:', email, password);
   };
 
   const switchToLogin = () => {
