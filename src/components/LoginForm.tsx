@@ -29,6 +29,7 @@ export function LoginForm() {
     if(user.email){
       navigate('/');
     }else if(sessionStorage.getItem('accessToken')){
+      console.log({s: sessionStorage.getItem('accessToken')})
       if(profileIsError){
         sessionStorage.setItem('accessToken', "");
         toast("Something went wrong", {
@@ -37,7 +38,8 @@ export function LoginForm() {
         });
       }
       if(profileData){
-        dispatch(setUser(profileData.data.email));
+        console.log(profileData)
+        // dispatch(setUser(profileData.data.email));
       }
     }
   },[user.email, navigate, profileData, profileIsError, dispatch]);
@@ -54,7 +56,8 @@ export function LoginForm() {
         autoClose: 2500,
         type: "success",
       });
-      dispatch(setUser(data.data._doc.email));
+      // console.log(data.data.email)
+      dispatch(setUser(data.data.email));
       sessionStorage.setItem('accessToken', data.data.accessToken);
       navigate('/');
     }

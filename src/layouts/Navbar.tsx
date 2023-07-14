@@ -1,10 +1,11 @@
 
+import { setUser } from '@/redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function Navbar() {
-  // const { user } = useAppSelector((state)=> state.user)
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch()
   const handleLogout = ()=>{
     console.log("on por")
@@ -16,6 +17,12 @@ export default function Navbar() {
     navigate('/login');
   };
 
+  const handleLogoutClick = () => {
+    dispatch(setUser(""));
+    sessionStorage.clear();
+    navigate('/login');
+  };
+
   const handleBooksClick = () => {
     navigate('/books');
   };
@@ -24,12 +31,14 @@ export default function Navbar() {
   return (
     <nav className="flex items-center justify-between bg-gray-900 p-4">
     <div className="text-white text-xl font-bold">Book Catalogue</div>
-    <div>
+    {
+      user.email?
+      <div>
       <button
         className="text-white mx-2"
-        onClick={handleLoginClick}
+        onClick={handleLogoutClick}
       >
-        Login
+        Logout
       </button>
       <button
         className="text-white mx-2"
@@ -38,6 +47,16 @@ export default function Navbar() {
         Books
       </button>
     </div>
+    :
+    <div>
+      <button
+        className="text-white mx-2"
+        onClick={handleLoginClick}
+      >
+        Login
+      </button>
+    </div>
+    }
   </nav>
   );
 }
