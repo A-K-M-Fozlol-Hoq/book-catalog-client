@@ -15,7 +15,6 @@ const PrivateRoute = ({children}: IProps) => {
         return <p>Loading...</p>
     }
     if(!user.email && !isLoading){
-        // return <Navigate to="/login" state={{path: pathname}} />
         return <LoginForm redirectPath={pathname} />;
     }
 

@@ -16,6 +16,9 @@ import { toast } from 'react-toastify';
 import { setUser } from '@/redux/features/user/userSlice';
 
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
 
 export function SignupForm() {
   const [email, setEmail] = React.useState('');
@@ -62,6 +65,11 @@ export function SignupForm() {
     }
   },[isError, isSuccess])
 
+  function validateEmail(email:string) {
+    return EMAIL_REGEX.test(email);
+  }
+  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -73,6 +81,22 @@ export function SignupForm() {
   const handleSubmit = async(event: React.FormEvent) => {
     event.preventDefault();
     const data = {email, password}
+    if(!validateEmail(email)){
+      toast("Please enter valid email", {
+        autoClose: 2500,
+        type: "error",
+      });
+      return;
+    }
+
+    if(password.length<6){
+      toast("Minimum length of password should be 6", {
+        autoClose: 2500,
+        type: "error",
+      });
+      return;
+    }
+    
     signup(data)
   };
 
@@ -94,6 +118,7 @@ export function SignupForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
             value={email}
             onChange={handleEmailChange}
+            required
           />
         </div>
         <div className="mb-4">
@@ -106,6 +131,7 @@ export function SignupForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
             value={password}
             onChange={handlePasswordChange}
+            required
           />
         </div>
         <button

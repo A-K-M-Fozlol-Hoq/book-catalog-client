@@ -15,8 +15,9 @@ import { setUser } from '@/redux/features/user/userSlice';
 import { useGetMyProfileQuery, useLoginMutation } from '@/redux/features/user/userApi';
 
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function LoginForm() {
+export function LoginForm({redirectPath="/"}) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
@@ -52,16 +53,22 @@ export function LoginForm() {
       });
     }
     if(isSuccess){
-      toast("User created successfully", {
+      toast("User logged in successfully", {
         autoClose: 2500,
         type: "success",
       });
       // console.log(data.data.email)
       dispatch(setUser(data.data.email));
       sessionStorage.setItem('accessToken', data.data.accessToken);
-      navigate('/');
+      navigate(redirectPath);
     }
   },[isError, isSuccess])
+
+  function validateEmail(email:string) {
+    return EMAIL_REGEX.test(email);
+  }
+  
+
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -73,6 +80,13 @@ export function LoginForm() {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const data = {email, password}
+    if(!validateEmail(email)){
+      toast("Please enter valid email", {
+        autoClose: 2500,
+        type: "error",
+      });
+      return;
+    }
     login(data)
   };
 
@@ -93,6 +107,7 @@ export function LoginForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
             value={email}
             onChange={handleEmailChange}
+            required
           />
         </div>
         <div className="mb-4">
@@ -105,6 +120,7 @@ export function LoginForm() {
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
             value={password}
             onChange={handlePasswordChange}
+            required
           />
         </div>
         <button
