@@ -40,7 +40,7 @@ export function LoginForm({redirectPath="/"}) {
       }
       if(profileData){
         console.log(profileData)
-        // dispatch(setUser(profileData.data.email));
+        dispatch(setUser(profileData.data.email));
       }
     }
   },[user.email, navigate, profileData, profileIsError, dispatch]);

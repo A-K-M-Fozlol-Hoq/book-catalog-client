@@ -1,6 +1,6 @@
-import { useSignupMutation } from '@/redux/features/user/userApi';
+import { useAddBookMutation } from '@/redux/features/book/bookApi';
+import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const AddBookForm: React.FC = () => {
@@ -8,8 +8,16 @@ const AddBookForm: React.FC = () => {
   const [author, setAuthor] = useState('');
   const [genre, setGenre] = useState('');
   const [publicationDate, setPublicationDate] = useState('');
-  const [addBook, {  isError,  isSuccess }] = useSignupMutation();
-  const navigate = useNavigate();
+  const [addBook, { data, isError,  isSuccess }] = useAddBookMutation();
+  const { user } = useAppSelector((state) => state.user);
+
+  const resetForm = () => {
+    setTitle('');
+    setAuthor('');
+    setGenre('');
+    setPublicationDate('');
+  };
+
 
   useEffect(()=>{
     if(isError){
@@ -24,9 +32,9 @@ const AddBookForm: React.FC = () => {
         autoClose: 2500,
         type: "success",
       });
-      navigate('/books')
+      resetForm()
     }
-  }, [isError, isSuccess])
+  }, [isError, isSuccess, data])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +47,8 @@ const AddBookForm: React.FC = () => {
         author,
         genre,
         publicationDate,
-        publicationYear
+        publicationYear,
+        ownerEmail: user.email
       }
     }
     addBook(postData)
