@@ -27,7 +27,7 @@ export default function Navbar() {
     navigate('/books');
   };
   const handleAddBook = () => {
-    navigate('/add-book');
+    navigate('/add-new-book');
   };
 
 
@@ -67,6 +67,14 @@ export default function Navbar() {
       >
         Login
       </button>
+
+      <button
+        className="text-white mx-5"
+        onClick={handleBooksClick}
+      >
+        Books
+      </button>
+      
     </div>
     }
   </nav>

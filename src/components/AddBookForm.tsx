@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 const AddBookForm: React.FC = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
-  const [genre, setGenre] = useState('');
+  const [genre, setGenre] = useState('Fantasy');
   const [publicationDate, setPublicationDate] = useState('');
   const [addBook, { data, isError,  isSuccess }] = useAddBookMutation();
   const { user } = useAppSelector((state) => state.user);
@@ -14,7 +14,7 @@ const AddBookForm: React.FC = () => {
   const resetForm = () => {
     setTitle('');
     setAuthor('');
-    setGenre('');
+    setGenre('Fantasy');
     setPublicationDate('');
   };
 
@@ -39,7 +39,13 @@ const AddBookForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const publicationYear = publicationDate ? new Date(publicationDate).getFullYear() : 2000;
-    console.log(title, author, genre, publicationDate, publicationYear)
+    if(!genre){
+      toast("Please select a genre", {
+        autoClose: 2500,
+        type: "error",
+      });
+      return ;
+    }
     const postData = {
       accessToken: sessionStorage.getItem('accessToken'),
       data:{
@@ -91,15 +97,41 @@ const AddBookForm: React.FC = () => {
         <label htmlFor="genre" className="block text-gray-700 font-bold mb-2">
         Genre:
         </label>
-          <input
+
+        {/* <div className="flex items-center mb-4">
+        <label htmlFor="genre" className="mr-2">
+          Genre:
+        </label> */}
+        <select
+          id="genre"
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          required
+          className="px-2 py-1 border border-gray-300 rounded-md"
+        >
+          <option value="Fantasy">Fantasy</option>
+          <option value="Romance">Romance</option>
+          <option value="Fiction">Fiction</option>
+          <option value="Biography">Biography</option>
+          <option value="Poet">Poet</option>
+          <option value="Poetry">Poetry</option>
+          <option value="History">History</option>
+          <option value="Poet">Poet</option>
+          <option value="Mystery">Mystery</option>
+          <option value="Drama">Drama</option>
+          <option value="Non-Fiction">Non-Fiction</option>
+        </select>
+      </div>
+
+          {/* <input
             className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none"
            type="text"
            id="genre"
            value={genre}
            onChange={(e) => setGenre(e.target.value)}
            required
-          />
-        </div>
+          /> */}
+        {/* </div> */}
       <div className="mb-4">
         <label htmlFor="publicationDate" className="block text-gray-700 font-bold mb-2">
           Publication Date
