@@ -2,7 +2,7 @@
 import { useAddReviewMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
 import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
-import {  useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
+import {  useNavigate, useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
 import { toast } from 'react-toastify';
 
 interface Book {
@@ -16,7 +16,7 @@ interface Book {
 
 const BookDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-//   const history = useHistory();
+  const navigate = useNavigate();
 
   const [book, setBook] = useState<Book | null>(null);
   const [reviews, setReviews] = useState<string[]>([]);
@@ -57,19 +57,13 @@ const BookDetails: React.FC = () => {
 
   const handleEditClick = () => {
     // Redirect to the edit book page with the book id
-    // history.push(`/edit-book/${id}`);
+    navigate(`/edit-book/${book?._id}`)
   };
 
   const handleDeleteClick = () => {
     // Show a confirmation dialogue before deleting the book
     const wantToDelete = window.confirm('Are you sure you want to delete this book?');
     console.log(wantToDelete)
-    // if (window.confirm('Are you sure you want to delete this book?')) {
-    //   // Delete the book from the server or your data store
-    //   // Replace the following with your API call or data deletion method
-    //   // After successful deletion, redirect to the "ViewBooks" page
-    // //   history.push('/view-books');
-    // }
   };
 
   const handleSubmitReview = (event: React.FormEvent) => {
