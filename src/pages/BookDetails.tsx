@@ -108,7 +108,7 @@ const BookDetails: React.FC = () => {
           <p><span className="font-semibold">Author:</span> {book.author}</p>
           <p><span className="font-semibold">Genre:</span> {book.genre}</p>
           <p><span className="font-semibold">Publication Date:</span> {book.publicationDate}</p>
-          <p><span className="font-semibold">Owner Email:</span> {book.ownerEmail}</p>
+          {/* <p><span className="font-semibold">Owner Email:</span> {book.ownerEmail}</p> */}
 
           <h2 className="text-xl font-bold mt-6 mb-4">Reviews</h2>
           {reviews.map((review, index) => (
@@ -117,20 +117,30 @@ const BookDetails: React.FC = () => {
             </div>
           ))}
 
-          {/* Review Submission Box */}
-          <form onSubmit={handleSubmitReview} className="mt-6">
-            <label className="block font-semibold">Leave a Review</label>
-            <textarea
-              value={newReview}
-              onChange={(e) => setNewReview(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
-              rows={4}
-              required
-            ></textarea>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
-              Submit Review
-            </button>
-          </form>
+          {
+            (!isLoading && reviews.length === 0 )&&
+            <p className='text-red-700'>***There is no reviews for this books***</p>
+          }
+
+          
+            
+          {
+            user?.email &&
+            // {/* Review Submission Box */}
+            <form onSubmit={handleSubmitReview} className="mt-6">
+              <label className="block font-semibold">Leave a Review</label>
+              <textarea
+                value={newReview}
+                onChange={(e) => setNewReview(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+                rows={4}
+                required
+              ></textarea>
+              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                Submit Review
+              </button>
+            </form>
+          }
 
           {/* Edit and Delete Buttons */}
           {user?.email === book.ownerEmail && 
