@@ -38,7 +38,9 @@ const EditBookForm = ({id=''}) => {
       });
     }
   }, [isError, isSuccess, bookIsError])
+
   
+
   useEffect(()=>{
     if(book){
       setTitle(book?.data?.title)
@@ -98,6 +100,7 @@ const EditBookForm = ({id=''}) => {
            id="title"
            value={title}
            onChange={(e) => setTitle(e.target.value)}
+           required
           />
         </div>
 
@@ -111,6 +114,7 @@ const EditBookForm = ({id=''}) => {
            id="author"
            value={author}
            onChange={(e) => setAuthor(e.target.value)}
+           required
           />
         </div>
         <div className="mb-4">
@@ -126,6 +130,7 @@ const EditBookForm = ({id=''}) => {
           id="genre"
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
+          required
           className="px-2 py-1 border border-gray-300 rounded-md"
         >
           <option value="Fantasy">Fantasy</option>
@@ -161,6 +166,7 @@ const EditBookForm = ({id=''}) => {
           className="form-input w-full"
           value={publicationDate}
           onChange={(e) => setPublicationDate(e.target.value)}
+          required
         />
       </div>
       <button

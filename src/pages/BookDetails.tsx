@@ -1,5 +1,5 @@
 // BookDetails.tsx
-import { useAddReviewMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
+import { useAddReviewMutation, useDeleteBookMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
 import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
 import {  useNavigate, useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
@@ -23,6 +23,7 @@ const BookDetails: React.FC = () => {
   const [newReview, setNewReview] = useState<string>('');
   const { data, isError, isLoading } = useGetSingleBookQuery({id});
   const [addReview, {  isError: reviewIsError,  isSuccess: reviewIsSuccess }] = useAddReviewMutation();
+  const [deleteBook, { isError:isDeleteError,  isSuccess:isDeleteSuccess }] = useDeleteBookMutation();
   const { user } = useAppSelector((state) => state.user);
 
   useEffect(()=>{
@@ -37,6 +38,23 @@ const BookDetails: React.FC = () => {
         }
     }
     },[data, isError])
+
+    useEffect(()=>{
+      if(isDeleteError){
+        toast("Failed to delete book", {
+          autoClose: 2500,
+          type: "error",
+        });
+      }
+  
+      if(isDeleteSuccess){
+        navigate(`/books`)
+        toast("Book deleted successfully", {
+          autoClose: 2500,
+          type: "success",
+        });
+      }
+    }, [isDeleteError, isDeleteSuccess])
 
     useEffect(()=>{
         if(reviewIsError){
@@ -63,7 +81,14 @@ const BookDetails: React.FC = () => {
   const handleDeleteClick = () => {
     // Show a confirmation dialogue before deleting the book
     const wantToDelete = window.confirm('Are you sure you want to delete this book?');
-    console.log(wantToDelete)
+    if(wantToDelete){
+      deleteBook({id, accessToken: sessionStorage.getItem('accessToken')})
+    }else{
+      toast("Cool! we didn't delete your book", {
+        autoClose: 2500,
+        type: "warning",
+      });
+    }
   };
 
   const handleSubmitReview = (event: React.FormEvent) => {
