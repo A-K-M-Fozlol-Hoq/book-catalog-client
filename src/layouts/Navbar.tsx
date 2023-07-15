@@ -26,8 +26,17 @@ export default function Navbar() {
   const handleBooksClick = () => {
     navigate('/books');
   };
+
   const handleAddBook = () => {
     navigate('/add-new-book');
+  };
+
+  const handleWishList = () => {
+    navigate('/wishlist');
+  };
+
+  const handleCurrentlyReading = () => {
+    navigate('/currently-reading');
   };
 
 
@@ -38,7 +47,7 @@ export default function Navbar() {
       user.email?
       <div>
       <button
-        className="text-white mx-5"
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
         onClick={handleLogoutClick}
       >
         Logout
@@ -46,30 +55,44 @@ export default function Navbar() {
       
       
       <button
-        className="text-white mx-5"
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
         onClick={handleBooksClick}
       >
         Books
       </button>
 
       <button
-        className="text-white mx-5"
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
         onClick={handleAddBook}
       >
         Add Book
+      </button>
+
+      <button
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
+        onClick={handleWishList}
+      >
+        Wish List 
+      </button>
+
+      <button
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
+        onClick={handleCurrentlyReading}
+      >
+        Currently Reading
       </button>
     </div>
     :
     <div>
       <button
-        className="text-white mx-5"
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
         onClick={handleLoginClick}
       >
         Login
       </button>
 
       <button
-        className="text-white mx-5"
+        className="text-white mx-2 bg-blue-700 py-1 px-2 rounded"
         onClick={handleBooksClick}
       >
         Books
