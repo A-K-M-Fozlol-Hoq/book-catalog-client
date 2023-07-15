@@ -8,6 +8,7 @@ interface GetBooksParams {
   genre?: string;
   publicationYear?: number;
   searchTerm?: string;
+  sortOrder?: string;
 }
 
 const bookApi = api.injectEndpoints({
@@ -66,11 +67,16 @@ const bookApi = api.injectEndpoints({
         genre,
         publicationYear,
         searchTerm,
+        sortOrder,
       }: GetBooksParams) => {
         const params: GetBooksParams = {};
 
         if (page) {
           params.page = page;
+        }
+
+        if (sortOrder) {
+          params.sortOrder = sortOrder;
         }
 
         if (limit) {

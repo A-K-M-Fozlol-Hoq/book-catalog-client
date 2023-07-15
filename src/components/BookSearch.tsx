@@ -11,7 +11,8 @@ const BookSearch: React.FC = () => {
   const { data, isLoading } = useGetBooksQuery({
     searchTerm,
     genre: genreFilter,
-    publicationYear: parseInt(yearFilter)
+    publicationYear: parseInt(yearFilter),
+    sortOrder:'asc'
   });
 
   useEffect(()=>{
