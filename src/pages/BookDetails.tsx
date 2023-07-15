@@ -1,5 +1,5 @@
 // BookDetails.tsx
-import { useGetSingleBookQuery } from '@/redux/features/book/bookApi';
+import { useAddReviewMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
 import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
 import {  useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
@@ -22,23 +22,38 @@ const BookDetails: React.FC = () => {
   const [reviews, setReviews] = useState<string[]>([]);
   const [newReview, setNewReview] = useState<string>('');
   const { data, isError, isLoading } = useGetSingleBookQuery({id});
+  const [addReview, {  isError: reviewIsError,  isSuccess: reviewIsSuccess }] = useAddReviewMutation();
   const { user } = useAppSelector((state) => state.user);
 
-//   useGetSingleBookQuery
-useEffect(()=>{
-console.log(data?.data, isError)
-if(data?.success){
-    setBook(data?.data)
-    setReviews(data?.data?.reviews)
-    if(isError){
-        toast("Something went wrong", {
-            autoClose: 2500,
-            type: "error",
-          });
+  useEffect(()=>{
+    if(data?.success){
+        setBook(data?.data)
+        setReviews(data?.data?.reviews)
+        if(isError){
+            toast("Something went wrong", {
+                autoClose: 2500,
+                type: "error",
+            });
+        }
     }
-}
+    },[data, isError])
 
-},[data, isError])
+    useEffect(()=>{
+        if(reviewIsError){
+            toast("Failed to add review", {
+                autoClose: 2500,
+                type: "error",
+            });
+        }
+        if(reviewIsSuccess){
+            setReviews([...reviews, newReview]);
+            setNewReview('');
+            toast("Review added successfully", {
+                autoClose: 2500,
+                type: "success",
+            });
+        }
+    },[reviewIsError, reviewIsSuccess])
 
   const handleEditClick = () => {
     // Redirect to the edit book page with the book id
@@ -59,12 +74,7 @@ if(data?.success){
 
   const handleSubmitReview = (event: React.FormEvent) => {
     event.preventDefault();
-    // Submit the new review to the server or your data store
-    // Replace the following with your API call or data submission method
-    // After successful submission, update the reviews state with the new review
-
-    setReviews([...reviews, newReview]);
-    setNewReview('');
+    addReview({ id: book?._id, review:newReview })    
   };
 
   if(!isLoading && !book){
@@ -84,7 +94,7 @@ if(data?.success){
           <h2 className="text-xl font-bold mt-6 mb-4">Reviews</h2>
           {reviews.map((review, index) => (
             <div key={index} className="border border-gray-300 p-4 rounded-lg mb-4">
-              <p> {review}{index} </p>
+              <p> {review} </p>
             </div>
           ))}
 
