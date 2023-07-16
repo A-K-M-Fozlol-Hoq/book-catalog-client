@@ -1,6 +1,6 @@
 import { useEditCurrentlyReadingMutation, useGetCurrentlyReadingQuery, useRemoveFromCurrentlyReadingMutation } from "@/redux/features/currentlyReading/currentlyReadingApi";
 import { useAppSelector } from "@/redux/hook";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
 enum ReadingStatus {

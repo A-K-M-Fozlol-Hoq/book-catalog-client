@@ -6,7 +6,6 @@ import Home from '@/pages/Home';
 import Signup from '@/pages/Signup';
 import AddBook from '@/pages/AddBook';
 import PrivateRoute from './PrivateRoute';
-import BookSearch from '@/pages/Books';
 import Books from '@/pages/Books';
 import BookDetails from '@/pages/BookDetails';
 import EditBook from '@/pages/EditBook';

@@ -1,7 +1,7 @@
 import { LoginForm } from '@/components/LoginForm';
 import { useAppSelector } from '@/redux/hook';
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 
 interface IProps{
     children: React.ReactNode;
