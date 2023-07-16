@@ -10,7 +10,7 @@ import BookSearch from '@/pages/Books';
 import Books from '@/pages/Books';
 import BookDetails from '@/pages/BookDetails';
 import EditBook from '@/pages/EditBook';
-import Wishlist from '@/pages/WhiteList';
+import Wishlist from '@/pages/WishList';
 import CurrentlyReading from '@/pages/CurrentlyReading';
 
 const routes = createBrowserRouter([

@@ -86,7 +86,7 @@ const CurrentlyReading: React.FC = () => {
         <table className="table-auto w-full">
         <thead>
           <tr>
-            <th className="px-4 py-2">Book Name</th>
+            <th className="px-4 py-2">Book Title</th>
             <th className="px-4 py-2">Book Author</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Actions</th>

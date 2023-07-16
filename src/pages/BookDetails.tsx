@@ -1,6 +1,7 @@
 // BookDetails.tsx
 import { useAddReviewMutation, useDeleteBookMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
 import { useAddCurrentlyReadingMutation } from '@/redux/features/currentlyReading/currentlyReadingApi';
+import { useAddWishListMutation } from '@/redux/features/wishList/wishListApi';
 import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
 import {  useNavigate, useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
@@ -26,23 +27,40 @@ const BookDetails: React.FC = () => {
   const [addReview, {  isError: reviewIsError,  isSuccess: reviewIsSuccess }] = useAddReviewMutation();
   const [deleteBook, { isError:isDeleteError,  isSuccess:isDeleteSuccess }] = useDeleteBookMutation();
   const [addReading, {  isError:readingIsError,  isSuccess:readingIsSuccess }] = useAddCurrentlyReadingMutation();
+  const [addWishList, {  isError:wishListIsError,  isSuccess:wishListIsSuccess }] = useAddWishListMutation();
   const { user } = useAppSelector((state) => state.user);
 
   useEffect(()=>{
-    if(readingIsError){
-      toast("Failed to add at currently reading", {
+    if(wishListIsError){
+      toast("Failed to add at wish list", {
         autoClose: 2500,
         type: "error",
       });
     }
 
-    if(readingIsSuccess){
-      toast("Added book at currently reading successfully", {
+    if(wishListIsSuccess){
+      toast("Added book at wish list successfully", {
         autoClose: 2500,
         type: "success",
       });
     }
-    },[readingIsError, readingIsSuccess])
+    },[wishListIsError, wishListIsSuccess])
+
+    useEffect(()=>{
+      if(readingIsError){
+        toast("Failed to add at currently reading", {
+          autoClose: 2500,
+          type: "error",
+        });
+      }
+  
+      if(readingIsSuccess){
+        toast("Added book at currently reading successfully", {
+          autoClose: 2500,
+          type: "success",
+        });
+      }
+      },[readingIsError, readingIsSuccess])
 
     useEffect(()=>{
       if(data?.success){
@@ -114,7 +132,13 @@ const BookDetails: React.FC = () => {
     addReview({ id: book?._id, review:newReview })    
   };
   const handleAddWishlist = () => {
-    console.log(" onb")   
+    console.log(" onb")  
+    const data = {
+      email: user?.email,
+      bookId: book?._id
+    }
+    addWishList({accessToken: sessionStorage.getItem('accessToken'), data}) 
+    // addWishList
   };
   const handleAddCurrentlyReading = () => {
     console.log(" onb")   
