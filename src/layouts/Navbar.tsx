@@ -1,15 +1,12 @@
 
 import { setUser } from '@/redux/features/user/userSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 
 export default function Navbar() {
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch()
-  const handleLogout = ()=>{
-    console.log("on por")
-  }
 
   const navigate = useNavigate();
 
