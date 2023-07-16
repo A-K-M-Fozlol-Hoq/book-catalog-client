@@ -10,6 +10,8 @@ import BookSearch from '@/pages/Books';
 import Books from '@/pages/Books';
 import BookDetails from '@/pages/BookDetails';
 import EditBook from '@/pages/EditBook';
+import Wishlist from '@/pages/WhiteList';
+import CurrentlyReading from '@/pages/CurrentlyReading';
 
 const routes = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ const routes = createBrowserRouter([
       {
         path: '/books',
         element:<Books />  ,
+      },
+      {
+        path: '/wishlist',
+        element:<PrivateRoute><Wishlist /></PrivateRoute> ,
+      },
+      {
+        path: '/currently-reading',
+        element: <PrivateRoute><CurrentlyReading /></PrivateRoute> ,
       },
     ],
   },

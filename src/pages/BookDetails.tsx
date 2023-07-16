@@ -1,5 +1,6 @@
 // BookDetails.tsx
 import { useAddReviewMutation, useDeleteBookMutation, useGetSingleBookQuery } from '@/redux/features/book/bookApi';
+import { useAddCurrentlyReadingMutation } from '@/redux/features/currentlyReading/currentlyReadingApi';
 import { useAppSelector } from '@/redux/hook';
 import React, { useEffect, useState } from 'react';
 import {  useNavigate, useParams } from 'react-router-dom'; // Assuming you are using React Router for navigation
@@ -24,20 +25,37 @@ const BookDetails: React.FC = () => {
   const { data, isError, isLoading } = useGetSingleBookQuery({id});
   const [addReview, {  isError: reviewIsError,  isSuccess: reviewIsSuccess }] = useAddReviewMutation();
   const [deleteBook, { isError:isDeleteError,  isSuccess:isDeleteSuccess }] = useDeleteBookMutation();
+  const [addReading, {  isError:readingIsError,  isSuccess:readingIsSuccess }] = useAddCurrentlyReadingMutation();
   const { user } = useAppSelector((state) => state.user);
 
   useEffect(()=>{
-    if(data?.success){
-        setBook(data?.data)
-        setReviews(data?.data?.reviews)
-        if(isError){
-            toast("Something went wrong", {
-                autoClose: 2500,
-                type: "error",
-            });
-        }
+    if(readingIsError){
+      toast("Failed to add at currently reading", {
+        autoClose: 2500,
+        type: "error",
+      });
     }
-    },[data, isError])
+
+    if(readingIsSuccess){
+      toast("Added book at currently reading successfully", {
+        autoClose: 2500,
+        type: "success",
+      });
+    }
+    },[readingIsError, readingIsSuccess])
+
+    useEffect(()=>{
+      if(data?.success){
+          setBook(data?.data)
+          setReviews(data?.data?.reviews)
+          if(isError){
+              toast("Something went wrong", {
+                  autoClose: 2500,
+                  type: "error",
+              });
+          }
+      }
+      },[data, isError])
 
     useEffect(()=>{
       if(isDeleteError){
@@ -95,6 +113,17 @@ const BookDetails: React.FC = () => {
     event.preventDefault();
     addReview({ id: book?._id, review:newReview })    
   };
+  const handleAddWishlist = () => {
+    console.log(" onb")   
+  };
+  const handleAddCurrentlyReading = () => {
+    console.log(" onb")   
+    const data = {
+      email: user?.email,
+      bookId: book?._id
+    }
+    addReading({accessToken: sessionStorage.getItem('accessToken'), data})
+  };
 
   if(!isLoading && !book){
     return(<h1 className='text-3xl font-bold mb-4 text-center'>Book Not Found</h1>)
@@ -105,10 +134,29 @@ const BookDetails: React.FC = () => {
       {book ? (
         <>
           <h1 className="text-3xl font-bold mb-4">Title: {book.title}</h1>
-          <p><span className="font-semibold">Author:</span> {book.author}</p>
+          
+          <p><span className="font-semibold ">Author:</span> {book.author}</p>
           <p><span className="font-semibold">Genre:</span> {book.genre}</p>
           <p><span className="font-semibold">Publication Date:</span> {book.publicationDate}</p>
           {/* <p><span className="font-semibold">Owner Email:</span> {book.ownerEmail}</p> */}
+
+          {
+            user?.email &&
+            <>
+              <button
+              onClick={handleAddWishlist}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg mr-4"
+            >
+              Add at Wish List
+            </button>
+            <button
+              onClick={handleAddCurrentlyReading}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg"
+            >
+              Add at Currently Reading
+            </button>
+            </>
+          }
 
           <h2 className="text-xl font-bold mt-6 mb-4">Reviews</h2>
           {reviews.map((review, index) => (
