@@ -2,7 +2,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MainLayout from './layouts/MainLayout';
 import { useAppDispatch } from './redux/hook';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useGetMyProfileQuery } from "./redux/features/user/userApi";
 import { setUser } from "./redux/features/user/userSlice";
 
